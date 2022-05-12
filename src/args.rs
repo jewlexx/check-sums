@@ -1,13 +1,19 @@
+use std::path::PathBuf;
+
 use pico_args::Arguments;
 
+#[derive(PartialEq, Eq)]
 pub enum ShaVersion {
     Sha1,
     Sha256,
     Sha512,
 }
 
+impl ShaVersion {}
+
 pub struct Args {
     pub sha_version: ShaVersion,
+    pub file_path: PathBuf,
 }
 
 impl Args {
@@ -29,6 +35,29 @@ impl Args {
             ShaVersion::Sha1
         };
 
-        Args { sha_version }
+        let path = args.free_from_fn(|p| {
+            let cwd = std::env::current_dir().unwrap();
+            let path = cwd.join(p);
+
+            if path.exists() {
+                if path.is_file() {
+                    Ok(path)
+                } else {
+                    Err("path is not a file")
+                }
+            } else {
+                Err("file does not exist")
+            }
+        });
+
+        if let Some(e) = path.clone().err() {
+            println!("{}", e);
+            std::process::exit(1);
+        }
+
+        Args {
+            sha_version,
+            file_path: path.unwrap(),
+        }
     }
 }
