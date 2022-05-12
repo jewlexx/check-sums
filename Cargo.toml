@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 pgp = "0.7.2"
 pico-args = { version = "0.4.2", features = ["combined-flags", "short-space-opt"] }
+sha1 = "0.10.1"
+sha2 = "0.10.2"
