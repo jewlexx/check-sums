@@ -9,9 +9,9 @@ mod args;
 fn main() {
     let args = Args::parse();
 
-    if args.sha_version == ShaVersion::Sha1 {
-        let hasher = Sha1::new();
-    }
+    // if args.sha_version == ShaVersion::Sha1 {
+    //     let hasher = Sha1::new();
+    // }
 
-    println!("Hello, world!");
+    println!("Hashing file: {}", args.file_path.display());
 }

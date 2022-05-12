@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{fs::File, io::Read, path::PathBuf};
 
 use pico_args::Arguments;
 
@@ -14,6 +14,7 @@ impl ShaVersion {}
 pub struct Args {
     pub sha_version: ShaVersion,
     pub file_path: PathBuf,
+    pub file_contents: Vec<u8>,
 }
 
 impl Args {
@@ -55,9 +56,18 @@ impl Args {
             std::process::exit(1);
         }
 
+        let path = path.unwrap();
+
+        let mut contents = Vec::<u8>::new();
+        File::open(&path)
+            .unwrap()
+            .read_to_end(&mut contents)
+            .unwrap();
+
         Args {
             sha_version,
-            file_path: path.unwrap(),
+            file_path: path,
+            file_contents: contents,
         }
     }
 }
